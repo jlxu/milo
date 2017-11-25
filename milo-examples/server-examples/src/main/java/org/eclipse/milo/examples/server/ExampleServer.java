@@ -58,17 +58,17 @@ public class ExampleServer {
     public ExampleServer() throws Exception {
         CryptoRestrictions.remove();
 
-        KeyStoreLoader loader = new KeyStoreLoader().load();
+        File securityTempDir = new File(System.getProperty("java.io.tmpdir"), "security");
+
+        LoggerFactory.getLogger(getClass())
+            .info("security temp dir: {}", securityTempDir.getAbsolutePath());
+
+        KeyStoreLoader loader = new KeyStoreLoader().load(securityTempDir);
 
         DefaultCertificateManager certificateManager = new DefaultCertificateManager(
             loader.getServerKeyPair(),
             loader.getServerCertificate()
         );
-
-        File securityTempDir = new File(System.getProperty("java.io.tmpdir"), "security");
-
-        LoggerFactory.getLogger(getClass())
-            .info("security temp dir: {}", securityTempDir.getAbsolutePath());
 
         DefaultCertificateValidator certificateValidator = new DefaultCertificateValidator(securityTempDir);
 
